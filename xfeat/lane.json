@@ -1,0 +1,49 @@
+{
+  "data": [
+    {
+      "line": 1,
+      "point": [
+        {
+          "point_id": 1,
+          "point_x": 51,
+          "point_y": 101
+        },
+        {
+          "point_id": 2,
+          "point_x": 52,
+          "point_y": 102
+        }
+      ]
+    },
+    {
+      "line": 2,
+      "point": [
+        {
+          "point_id": 1,
+          "point_x": 53,
+          "point_y": 103
+        },
+        {
+          "point_id": 2,
+          "point_x": 54,
+          "point_y": 104
+        }
+      ]
+    },
+    {
+      "line": 3,
+      "point": [
+        {
+          "point_id": 1,
+          "point_x": 55,
+          "point_y": 105
+        },
+        {
+          "point_id": 2,
+          "point_x": 55,
+          "point_y": 106
+        }
+      ]
+    }
+  ]
+}
