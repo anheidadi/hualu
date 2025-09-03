@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(xfeat)
 #set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
 set(CMAKE_CXX_STANDARD 14)
-SET(CMAKE_BUILD_TYPE "Debug")
+#SET(CMAKE_BUILD_TYPE "Debug")
 # rknn api
 include_directories(.
 
@@ -29,8 +29,8 @@ include_directories(${RKNN_API_PATH}/include)
 #        /usr/include/mariadb)
 #
 
-add_executable(xfeat
-        test.cpp)
+#add_executable(xfeat
+#        test.cpp)
         
 #add_executable(xfeat
 #        registration.cpp
@@ -49,17 +49,17 @@ add_executable(xfeat
 #MESSAGE(STATUS "    libraries: ${OpenCL_LIBRARY}")
 #MESSAGE(STATUS "    include path: ${OpenCL_INCLUDE_DIR}")
 
-#add_library(
-#        xfeat SHARED
-#        registration.cpp
-#        XFeat.cpp
-#        Logger.cpp
-#        json.hpp
-#        includelib.h
-#)
+add_library(
+        xfeat SHARED
+        registration.cpp
+        XFeat.cpp
+        Logger.cpp
+        json.hpp
+        includelib.h
+)
 
 target_link_libraries(xfeat
-        PRIVATE dl
+#        PRIVATE dl
         ${RKNN_RT_LIB}
         ${OpenCV_LIBS}
 #        mariadbclient

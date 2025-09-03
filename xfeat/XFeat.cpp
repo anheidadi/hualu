@@ -7,6 +7,7 @@ using json = nlohmann::json;
 using namespace  std;
 string logname=readyInit();
 Logger logger(logname);
+//用时间命名图片
 std::string generateImageFilename() {
     // 获取当前时间
     time_t now = time(nullptr);
@@ -528,9 +529,9 @@ void XFeat::run(const cv::Mat image, std::vector<cv::KeyPoint> &keys, cv::Mat &d
         logger.log(Logger::ERROR,"oldlane数据不存在");
         return;
     }
-
-    std::string filename = generateImageFilename();
-    cv::imwrite(filename,image);
+    //保存为时间命名的图片
+//    std::string filename = generateImageFilename();
+//    cv::imwrite(filename,image);
     cv::Mat imgs;
     ori_h=image.rows;
     ori_h=image.rows;
@@ -777,7 +778,6 @@ void XFeat::run(const cv::Mat image, std::vector<cv::KeyPoint> &keys, cv::Mat &d
     rknn_outputs_release(ctx, io_num.n_output, outputs);
 
 
-
 }
 void XFeat::FisrtInfer(const cv::Mat oldimage){
 //    cv::Mat oldimage = cv::imread("../../data/lanepic/oldlane.jpg", cv::IMREAD_UNCHANGED);
@@ -805,6 +805,23 @@ bool XFeat::Infer(const cv::Mat image) {
         pts2.push_back(keys2[m.trainIdx].pt);
     }
     RejectBadMatchesF(pts1, pts2, matches, thresh,maxiter);
+
+//    for(const auto i : result_set){
+//
+//        double trans_x= stof(i[2])*H_matrix[0]*scaleSize+ stof(i[3])*H_matrix[1]*scaleSize+H_matrix[2];
+//        double trans_y= stof(i[2])*H_matrix[3]*scaleSize+ stof(i[3])*H_matrix[4]*scaleSize+H_matrix[5];
+//        cv::circle(image, cv::Point(int(trans_x*width_scale_), int(trans_y*height_scale_)), 3, cv::Scalar(0,0,255), -1);
+//
+//    }
+//    for(const auto i : result_set){
+//
+//        vector<float> aaaa=getTransPoint(stof(i[2]),stof(i[3]));
+//        cv::circle(image, cv::Point(int(aaaa[0]*4*width_scale_), int(aaaa[1]*4*height_scale_)), 5, cv::Scalar(0,255,0), -1);
+//
+//    }
+//    std::string filename = generateImageFilename();
+//    cv::imwrite(filename,image);
+
 
     isUpate();
     if (isupdate){
@@ -941,47 +958,40 @@ vector<double> XFeat::getH() {
 }
 vector<float> XFeat::getTransPoint(float x, float y ) {
 
-    //除以2，是用来映射回320的分辨率
-/*    std::cout << "函数内输出矩阵信息:"  << std:: endl;
-    cout<<"[";
-    int count=0;
-    for (const auto& num : H_matrix) {
-        if (count==0){
-            cout << "[";
-        }
+/*    if(x<=0.0){
 
-        if (count==2){
-            std::cout << num << "],";
-            count=-1;
-        }
-        else{
-            std::cout << num << ",";
-        }
-        count++;
-
+        logger.log(Logger::ERROR,"数据x越界:"+std::to_string(x));
     }
-    std::cout << "]"  << std:: endl;
-    std::cout << "函数内数据:" <<x << ":"<< y<<std::endl;*/
-    printf("函数输入:%f",x);
-    printf("函数输入:%f",y);
+    else if(x>=320.0){
+
+        logger.log(Logger::ERROR,"数据x越界:"+std::to_string(x));
+    }
+    if(y<=0.0){
+
+        logger.log(Logger::ERROR,"数据y越界:"+std::to_string(y));
+    }
+    else if(y>=320.0){
+
+        logger.log(Logger::ERROR,"数据y越界:"+std::to_string(y));
+    }*/
+
     float tran_X=x*H_matrix[0]+ y*H_matrix[1]+H_matrix[2]/scaleSize;
     float tran_Y=x*H_matrix[3]+ y*H_matrix[4]+H_matrix[5]/scaleSize;
-    //std::cout << "函数内转换后数据:" <<tran_X << ":"<< tran_Y<<std::endl;
-    if(tran_X<0){
-        tran_X=0.0002;
-//        logger.log(Logger::ERROR,"数据X越界");
+    if(tran_X<=0.0){
+        tran_X=0.1;
+//        logger.log(Logger::ERROR,"数据tran_X越界:"+std::to_string(tran_X));
     }
-    else if(tran_X>320){
-        tran_X=319.999911;;
-//        logger.log(Logger::ERROR,"数据X越界");
+    else if(tran_X>=320){
+        tran_X=319.91;
+//        logger.log(Logger::ERROR,"数据tran_X越界:"+std::to_string(tran_X));
     }
-    if(tran_Y<0){
-        tran_Y=0.0002;
-//        logger.log(Logger::ERROR,"数据Y越界");
+    if(tran_Y<=0.0){
+        tran_Y=0.1;
+//        logger.log(Logger::ERROR,"数据tran_Y越界:"+std::to_string(tran_Y));
     }
-    else if(tran_Y>320){
-        tran_Y=319.999911;
-//        logger.log(Logger::ERROR,"数据Y越界");
+    else if(tran_Y>=320.0){
+        tran_Y=319.91;
+//        logger.log(Logger::ERROR,"数据tran_Y越界:"+std::to_string(tran_Y));
     }
     return {tran_X,tran_Y};
 
